@@ -124,16 +124,16 @@ void decode_raw_packet(uint8_t *packet, uint64_t packet_len){
  *  converts all of the network byte order fields into host byte order.
  */
 arp_packet_t *process_arp(raw_packet_t raw_packet) {
-    
-    //TODO: Implement this function.  Convert raw_packet via
-    //type conversion to arp_packet_t and then convert the
-    //network byte order fields to host byte order fields using
-    //ntohs() and/or ntohl().  Return a pointer to an arp_packet_t
-    //You do not need to allocate any memory. 
 
-    //remove this after you implement the logic, just here to make sure
-    //the program compiles
-    return (arp_packet_t *)raw_packet;
+    arp_packet_t* arp_packet = (arp_packet_t*)raw_packet;
+
+    arp_packet ->arp_hdr.htype = ntohs(arp_packet ->arp_hdr.htype);
+
+    arp_packet->arp_hdr.ptype = ntohs(arp_packet->arp_hdr.ptype);
+
+    arp_packet->arp_hdr.op = ntohs(arp_packet->arp_hdr.op);
+
+    return arp_packet;
 }
 
 /*
@@ -142,25 +142,17 @@ arp_packet_t *process_arp(raw_packet_t raw_packet) {
  *  ARP_REQUEST or an ARP_RESPONSE
  */
 void print_arp(arp_packet_t *arp){
-//TODO:  take the arp parameter, of type arp_packet_t and print it out
-//nicely.  My output looks like below, but you dont have to make it look
-//exactly like this, just something nice. 
-/*
-Packet length = 60 bytes
-Detected raw frame type from ethernet header: 0x806
-Packet type = ARP
-ARP PACKET DETAILS 
-     htype:     0x0001 
-     ptype:     0x0800 
-     hlen:      6  
-     plen:      4 
-     op:        1 (ARP REQUEST)
-     spa:       192.168.50.1 
-     sha:       a0:36:bc:62:ed:50 
-     tpa:       192.168.50.99 
-     tha:       00:00:00:00:00:00 
- */
- printf("remove this, for now just printing hello from ARP\n");
+
+ printf("ARP PACKET DETAILS\n");
+ printf("\thtype:\t0x%04x \n",arp ->arp_hdr.htype);
+ printf("\tptype\t0x%04x \n",arp ->arp_hdr.ptype);
+ printf("\thlen:\t%u\n",arp ->arp_hdr.hlen);
+ printf("\tplen:\t%u\n",arp ->arp_hdr.plen);
+ printf("\top:\t%u (ARP REQUEST)\n",arp ->arp_hdr.op);
+ printf("\tspa:\t%u.%u.%u.%u\n", arp->arp_hdr.spa[0], arp->arp_hdr.spa[1], arp->arp_hdr.spa[2], arp->arp_hdr.spa[3]);
+ printf("\tsha:\t%u:%u:%u:%u:%u:%u\n", arp->arp_hdr.sha[0], arp->arp_hdr.sha[1], arp->arp_hdr.sha[2], arp->arp_hdr.sha[3], arp->arp_hdr.sha[4], arp->arp_hdr.sha[5]);
+ printf("\ttpa:\t%u.%u.%u.%u\n", arp->arp_hdr.tpa[0], arp->arp_hdr.tpa[1], arp->arp_hdr.tpa[2], arp->arp_hdr.tpa[3]);
+ printf("\ttha:\t%u:%u:%u:%u:%u:%u\n", arp->arp_hdr.tha[0], arp->arp_hdr.tha[1], arp->arp_hdr.tha[2], arp->arp_hdr.tha[3], arp->arp_hdr.tha[4], arp->arp_hdr.tha[5]);
     
 }
 
