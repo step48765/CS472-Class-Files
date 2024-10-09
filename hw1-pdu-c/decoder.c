@@ -181,22 +181,13 @@ bool check_ip_for_icmp(ip_packet_t *ip){
  *  network to host byte order. 
  */
 icmp_packet_t *process_icmp(ip_packet_t *ip){
-    //TODO: Implement this function.  Convert ip_packet via
-    //type conversion to icmp_packet_t and then convert the
-    //network byte order fields to host byte order fields using
-    //ntohs() and/or ntohl().  Return a pointer to an icmp_packet_t
-    //You do not need to allocate any memory. 
 
-    //remove this after you implement the logic, just here to make sure
-    //the program compiles
 
-    arp_packet_t* arp = (arp_packet_t*)ip;
+    icmp_packet_t* icmp = (icmp_packet_t*)ip;
 
-    arp ->arp_hdr.htype = ntohs(arp ->arp_hdr.htype);
+    icmp->icmp_hdr.checksum = ntohs(icmp->icmp_hdr.checksum);
 
-    arp->arp_hdr.ptype = ntohs(arp->arp_hdr.ptype);
 
-    arp->arp_hdr.op = ntohs(arp->arp_hdr.op);
 
     return arp;
 
@@ -217,7 +208,8 @@ bool is_icmp_echo(icmp_packet_t *icmp) {
     
     //remove this after you implement the logic, just here to make sure
     //the program compiles
-    return false;
+
+    return (icmp->icmp_hdr.type == ICMP_ECHO_REQUEST || icmp->icmp_hdr.type == ICMP_ECHO_RESPONSE);
 }
 
 /*
