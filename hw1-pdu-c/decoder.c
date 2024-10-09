@@ -174,7 +174,7 @@ bool check_ip_for_icmp(ip_packet_t *ip){
     
     //remove this after you implement the logic, just here to make sure
     //the program compiles
-    return false;
+    return ip->ip_hdr.protocol == ICMP_PTYPE ? true : false;;
 }
 
 /*
