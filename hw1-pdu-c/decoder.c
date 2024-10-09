@@ -189,7 +189,17 @@ icmp_packet_t *process_icmp(ip_packet_t *ip){
 
     //remove this after you implement the logic, just here to make sure
     //the program compiles
-    return (icmp_packet_t *)ip;
+
+    arp_packet_t* arp = (arp_packet_t*)ip;
+
+    arp ->arp_hdr.htype = ntohs(arp ->arp_hdr.htype);
+
+    arp->arp_hdr.ptype = ntohs(arp->arp_hdr.ptype);
+
+    arp->arp_hdr.op = ntohs(arp->arp_hdr.op);
+
+    return arp;
+
 }
 
 /*
