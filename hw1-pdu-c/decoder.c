@@ -167,14 +167,10 @@ void print_arp(arp_packet_t *arp){
  *  IP PDU is set to ICMP_PTYPE to do this.
  */
 bool check_ip_for_icmp(ip_packet_t *ip){
-    //TODO:  This function inspects the provided IP packet and extracts
-    //the protocol.  If the protocol is ICMP_PTYPE then we return true
-    //otherwise we return false.  The function header gives some more
-    //hints.
-    
-    //remove this after you implement the logic, just here to make sure
-    //the program compiles
-    return ip->ip_hdr.protocol == ICMP_PTYPE ? true : false;;
+
+    //bool protocol = ip->ip_hdr.protocol == ICMP_PTYPE ? true : false;
+    //printf("THE PROTOCAL IS INDEED %s\n", protocol ? "true" : "false");
+    return ip->ip_hdr.protocol == ICMP_PTYPE ? true : false;
 }
 
 /*
