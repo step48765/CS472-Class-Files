@@ -257,8 +257,8 @@ ICMP PACKET DETAILS
     printf("\ttimestamp:\t0x%08x\n",icmp_packet->icmp_echo_hdr.timestamp);
  
     uint16_t payload_size = ICMP_Payload_Size(icmp_packet);
-    printf("\tpayload:\t%i\n",payload_size);
-
+    printf("\tpayload:\t%i bytes\n",payload_size);
+    /*
     time_t ts = (time_t)(icmp_packet->icmp_echo_hdr.timestamp);
     struct tm *time_info = gmtime(&ts);
     printf("\tECHO Timestamp: TS = %04d-%02d-%02d %02d:%02d:%02d:%u\n",
@@ -270,7 +270,10 @@ ICMP PACKET DETAILS
            time_info->tm_sec,          // Seconds (0-59)
            icmp_packet->icmp_echo_hdr.timestamp_ms);    
 
+    */
 
+    printf("\tECHO Timestamp: %s\n", get_ts_formatted(icmp_packet->icmp_echo_hdr.timestamp, icmp_packet->icmp_echo_hdr.timestamp_ms));
+    
     //Now print the payload data
     print_icmp_payload(icmp_packet->icmp_payload, payload_size);
 }
@@ -306,12 +309,6 @@ ICMP PACKET DETAILS
  * 0x0028 | 0x30  0x31  0x32  0x33  0x34  0x35  0x36  0x37  
  */
 void print_icmp_payload(uint8_t *payload, uint16_t payload_size) {
-//TODO:  this function takes the payload which is just basically an 
-//array of bytes and prints it out nicely.  My output is shown in the
-//function header, you can alter your output just make sure it looks
-//nice.  I provided the alogorithm for how I printed the above out
-//in the function header.
-
     int line_length =16;  
     
     printf("PAYLOAD\n");
