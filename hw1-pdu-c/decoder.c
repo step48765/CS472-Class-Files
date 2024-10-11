@@ -17,6 +17,9 @@
 //a test_packet_t element for each sample, this allows us to get and use
 //the packet length, which will be helpful later.
 test_packet_t TEST_CASES[] = {
+    MAKE_PACKET(raw_packet_arp_frame1),
+    MAKE_PACKET(raw_packet_icmp_frame2),
+    MAKE_PACKET(raw_packet_icmp_frame3),
     MAKE_PACKET(raw_packet_icmp_frame198),
     MAKE_PACKET(raw_packet_icmp_frame362),
     MAKE_PACKET(raw_packet_arp_frame78)
@@ -150,7 +153,10 @@ void print_arp(arp_packet_t *arp){
  printf("\tplen:\t%u\n",arp ->arp_hdr.plen);
  printf("\top:\t%u (ARP REQUEST)\n",arp ->arp_hdr.op);
  printf("\tspa:\t%u.%u.%u.%u\n", arp->arp_hdr.spa[0], arp->arp_hdr.spa[1], arp->arp_hdr.spa[2], arp->arp_hdr.spa[3]);
- printf("\tsha:\t%u:%u:%u:%u:%u:%u\n", arp->arp_hdr.sha[0], arp->arp_hdr.sha[1], arp->arp_hdr.sha[2], arp->arp_hdr.sha[3], arp->arp_hdr.sha[4], arp->arp_hdr.sha[5]);
+ //printf("\tsha:\t%u:%u:%u:%u:%u:%u\n", arp->arp_hdr.sha[0], arp->arp_hdr.sha[1], arp->arp_hdr.sha[2], arp->arp_hdr.sha[3], arp->arp_hdr.sha[4], arp->arp_hdr.sha[5]);
+ char mac[18];
+ mac_toStr(arp->arp_hdr.sha, mac,18);
+ printf("\tsha:\t%s\n",mac);
  printf("\ttpa:\t%u.%u.%u.%u\n", arp->arp_hdr.tpa[0], arp->arp_hdr.tpa[1], arp->arp_hdr.tpa[2], arp->arp_hdr.tpa[3]);
  printf("\ttha:\t%u:%u:%u:%u:%u:%u\n", arp->arp_hdr.tha[0], arp->arp_hdr.tha[1], arp->arp_hdr.tha[2], arp->arp_hdr.tha[3], arp->arp_hdr.tha[4], arp->arp_hdr.tha[5]);
     
@@ -258,7 +264,7 @@ ICMP PACKET DETAILS
  
     uint16_t payload_size = ICMP_Payload_Size(icmp_packet);
     printf("\tpayload:\t%i bytes\n",payload_size);
-    /*
+    
     time_t ts = (time_t)(icmp_packet->icmp_echo_hdr.timestamp);
     struct tm *time_info = gmtime(&ts);
     printf("\tECHO Timestamp: TS = %04d-%02d-%02d %02d:%02d:%02d:%u\n",
@@ -270,9 +276,9 @@ ICMP PACKET DETAILS
            time_info->tm_sec,          // Seconds (0-59)
            icmp_packet->icmp_echo_hdr.timestamp_ms);    
 
-    */
+    
 
-    printf("\tECHO Timestamp: %s\n", get_ts_formatted(icmp_packet->icmp_echo_hdr.timestamp, icmp_packet->icmp_echo_hdr.timestamp_ms));
+    //printf("\tECHO Timestamp: %s\n", get_ts_formatted(icmp_packet->icmp_echo_hdr.timestamp, icmp_packet->icmp_echo_hdr.timestamp_ms));
     
     //Now print the payload data
     print_icmp_payload(icmp_packet->icmp_payload, payload_size);
