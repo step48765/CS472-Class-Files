@@ -210,14 +210,7 @@ bool is_icmp_echo(icmp_packet_t *icmp) {
  *  convert from network to host byte order.
  */
 icmp_echo_packet_t *process_icmp_echo(icmp_packet_t *icmp){
-    //TODO: Implement this function.  Convert icmp_packet_t via
-    //type conversion to icmp_echo_packet_t and then convert the
-    //network byte order fields to host byte order fields using
-    //ntohs() and/or ntohl().  Return a pointer to an icmp_echo_packet_t
-    //You do not need to allocate any memory. 
 
-    //remove this after you implement the logic, just here to make sure
-    //the program compiles
 
     icmp_echo_packet_t* icmp_echo = (icmp_echo_packet_t*) icmp;
 
@@ -239,9 +232,7 @@ icmp_echo_packet_t *process_icmp_echo(icmp_packet_t *icmp){
  *  gives the size of the payload buffer.
  */
 void print_icmp_echo(icmp_echo_packet_t *icmp_packet){
-//TODO:  take the icmp_packet parameter, of type icmp_echo_packet_t 
-//and print it out nicely.  My output looks like below, but you dont 
-//have to make it look exactly like this, just something nice. 
+
 /*
 Packet length = 98 bytes
 Detected raw frame type from ethernet header: 0x800
@@ -257,15 +248,28 @@ ICMP PACKET DETAILS
      ECHO Timestamp: TS = 2023-09-22 21:06:54.57804
  */
     
-    //remove this, just a placeholder
-    printf("This is where you place your logic to print your ICMP echo PDU header\n");
-
-    //after you print the echo header, print the payload.
-
-    //We can calculate the payload size using a macro i provided for you in
-    //packet.h. Check it out, but I am providing you the code to call it here
-    //correctly.  You can thank me later. 
+    printf("ICMP Type %u\n", icmp_packet->icmp_echo_hdr.icmp_hdr.type);
+    printf("ICMP PACKET DETAILS\n");
+    printf("\ttype:\t\t0x%02x\n",icmp_packet->icmp_echo_hdr.icmp_hdr.type);
+    printf("\tchecksum:\t0x%04x\n",icmp_packet->icmp_echo_hdr.icmp_hdr.checksum);
+    printf("\tid:\t\t0x%04x\n",icmp_packet->icmp_echo_hdr.id);
+    printf("\tsequence:\t0x%04x\n",icmp_packet->icmp_echo_hdr.sequence);
+    printf("\ttimestamp:\t0x%08x\n",icmp_packet->icmp_echo_hdr.timestamp);
+ 
     uint16_t payload_size = ICMP_Payload_Size(icmp_packet);
+    printf("\tpayload:\t%i\n",payload_size);
+
+    time_t ts = (time_t)(icmp_packet->icmp_echo_hdr.timestamp);
+    struct tm *time_info = gmtime(&ts);
+    printf("\tECHO Timestamp: TS = %04d-%02d-%02d %02d:%02d:%02d:%u\n",
+           time_info->tm_year + 1900,  // Year since 1900
+           time_info->tm_mon + 1,      // Month (0-11, so we add 1)
+           time_info->tm_mday,         // Day of the month
+           time_info->tm_hour,         // Hours (0-23)
+           time_info->tm_min,          // Minutes (0-59)
+           time_info->tm_sec,          // Seconds (0-59)
+           icmp_packet->icmp_echo_hdr.timestamp_ms);    
+
 
     //Now print the payload data
     print_icmp_payload(icmp_packet->icmp_payload, payload_size);
@@ -308,10 +312,31 @@ void print_icmp_payload(uint8_t *payload, uint16_t payload_size) {
 //nice.  I provided the alogorithm for how I printed the above out
 //in the function header.
 
-    printf("delete this, but this is where your output goes\n");
-    printf("This is how to print a hex 5 nicely: %02x\n", 5);
-    printf("This is how to print a long value of 20000 nicely: %04lx\n", 2000l);
+    int line_length =16;  
+    
+    printf("PAYLOAD\n");
+    printf("OFFSET | CONTENTS\n");
+    printf("-------------------------------------------------------\n");
 
+    for (int i = 0; i < payload_size; i++) {
+        // if is start of line print the offset
+        if (i % line_length == 0) {
+            printf("0x%04x | ", i);
+        }
+        
+        // print in hex format
+        printf("0x%02x  ", payload[i]);
+
+        // print \n at end of line
+        if (i % line_length == (line_length - 1)) {
+            printf("\n");
+        }
+    }
+    
+    // if last line not a multiple of line_length do \n
+    if (payload_size % line_length != 0) {
+        printf("\n");
+    }
 }
 
 
