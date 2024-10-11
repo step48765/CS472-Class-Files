@@ -218,7 +218,14 @@ icmp_echo_packet_t *process_icmp_echo(icmp_packet_t *icmp){
 
     //remove this after you implement the logic, just here to make sure
     //the program compiles
-    return (icmp_echo_packet_t *)icmp;
+
+    icmp_echo_packet_t* icmp_echo = (icmp_echo_packet_t*) icmp;
+
+    icmp_echo ->icmp_echo_hdr.id = ntohs(icmp_echo ->icmp_echo_hdr.id);
+    icmp_echo ->icmp_echo_hdr.sequence = ntohs(icmp_echo ->icmp_echo_hdr.sequence);
+    icmp_echo ->icmp_echo_hdr.timestamp = ntohl(icmp_echo ->icmp_echo_hdr.timestamp);
+    icmp_echo ->icmp_echo_hdr.timestamp_ms = ntohl(icmp_echo ->icmp_echo_hdr.timestamp_ms);
+    return icmp_echo;
 }
 
 /*
