@@ -74,6 +74,7 @@ static void process_requests(int listen_socket) {
         uint8_t *msgPointer = NULL;
         uint8_t msgLen = 0;
         process_recv_packet(pcktPointer, recv_buffer, &msgPointer, &msgLen);
+        msgPointer[msgLen] = '\0';
         printf("length: %hhu\n", msgLen);
 
         memcpy(&header, pcktPointer, sizeof(cs472_proto_header_t));
@@ -96,7 +97,11 @@ static void process_requests(int listen_socket) {
 
         case CMD_PING_PONG:
             strcpy(msg_out_buffer, "PONG: ");
+            printf("the length here: %lu \n", strlen((const char *)msgPointer));
             strncat(msg_out_buffer, (char *)msgPointer, msgLen);
+            for (size_t i = 0; i < msgLen; i++) {  // -1 to exclude the null terminator
+                printf("Character: %c, Unsigned int value: %u\n", msgPointer[i], (uint8_t)msgPointer[i]);
+            }
             printf("buffer: %lu\n", strlen(msg_out_buffer));
             header.len = strlen(msg_out_buffer) + sizeof(header);
             //header.len = strlen(msg_out_buffer) + sizeof(header)+1;
