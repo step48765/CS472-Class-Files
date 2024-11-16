@@ -156,7 +156,7 @@ int submit_request(int sock, const char *host, uint16_t port, char *resource){
 
 
     //--------------------------------------------------------------------------------
-    //TODO:  Get the conetent len
+    //DONE- TODO:  Get the conetent len
     //
     // 1. Use the get_http_content_len() function to set the content_len variable.
     //
@@ -165,7 +165,7 @@ int submit_request(int sock, const char *host, uint16_t port, char *resource){
     // is no body, AKA, content_len is zero;
     //--------------------------------------------------------------------------------
     int content_len = 0;    //Change this to get the content length
-
+    content_len = get_http_content_len(recv_buff, BUFF_SZ);
     //--------------------------------------------------------------------------------
     // TODO:  Make sure you understand the calculations below
     //
