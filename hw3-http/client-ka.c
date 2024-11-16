@@ -229,6 +229,12 @@ int submit_request(int sock, const char *host, uint16_t port, char *resource){
     //  
     // YOUR ANSWER:  <START-YOUR-RESPONSE-HERE>
     //
+    /*
+    This function returns an active socket when its done b/c it ensures the socket is always in a valid state before its finally return. 
+    If the initial socket fails during sending or receiving data, the function attempts to reopen it using reopen_socket. 
+    Only when a valid socket is setup and all data is successfully sent and received does the function return the socket. 
+    This allows the caller to reuse the existing connection for future requests as part of the Keep-Alive protocol.
+    */
     //--------------------------------------------------------------------------------
     return sock;
 }
