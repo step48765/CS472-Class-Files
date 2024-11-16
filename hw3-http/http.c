@@ -134,7 +134,32 @@ int socket_connect(const char *host, uint16_t port){
     return sock;
 }
 
-/*TODO: Comments*/
+/**
+ * get_http_header_len is meant to alculate the length of the HTTP header in the response buffer.
+ *
+ * This function looks over a provided buffer (http_buff) containing an HTTP response 
+ *  with the goal of locating the end of the headers noted by the HTTP_HEADER_END seq 
+ * ("\r\n\r\n") basically this means 2 back to back like we talked about in class. 
+ * It returns the complete length of the header including the HTTP_HEADER_END 
+ * sequence or -1 if the end of the header is not found.
+ *
+ * Steps:
+ * 1. Uses strnstr() for searching for the HTTP_HEADER_END sequence within the buff.
+ *    - This ensures the function only searches till the http_buff_len bytes.
+ *    - If the sequence is not found the function logs the error and returns -1.
+ * 2. Then it calculates the header length:
+ *    - Finds the position of HTTP_HEADER_END relative to the start of the buffer 
+ *      using pointer subtraction (end_ptr - http_buff).
+ *    - Adds the length of the HTTP_HEADER_END sequence (strlen(HTTP_HEADER_END)) 
+ *      to include it in the total length.
+ * 3. Returns the calculated header length if successful.
+ *
+ * research Notes:
+ * - The function assumes the buff contains a valid response with the HTTP_HEADER_END sequence.
+ * - If the header end is not found it indicates a incomplete/ error HTTP response.
+ * - strnstr() is a safe way to search within a fixed-size buffer preventing overflows.
+ */
+
 
 int get_http_header_len(char *http_buff, int http_buff_len){
     char *end_ptr;
@@ -151,7 +176,37 @@ int get_http_header_len(char *http_buff, int http_buff_len){
     return header_len;
 }
 
-/*TODO: Comments*/
+/**
+ * the get_http_content_len extracts the Content-Length from an HTTP header buffer.
+ *
+ * The function searchs the HTTP header section of a response to find the Content-Length
+ * header and removes its value. This specifies the size of the body content in bytes.
+ * It returns the content length as an int or 0 if the Content-Length header is just not found.
+ *
+ * It's parameters:
+ * - http_buff is the buffer containing the HTTP response.
+ * - http_header_len is the length of the HTTP header section.
+ *
+ *  Steps:
+ * 1. First it nitializes the pointers to iterate over the header lines:
+ *    - next_header_line points to the current header line.
+ *    - end_header_buff marks the end of the header section.
+ * 2. It then iterate over each header line:
+ *    - It needs to clear header_line using bzero to ensure it starts empty.
+ *    - Then extracts a single line using sscanf and stores it in header_line.
+ *    - Uses strcasestr to check if the line contains content-Length.
+ * 3. Checks if Content-Length is found:
+ *    - Uses strchr to locate the delimiter (:) separating the header name and value.
+ *    - Extracts the value, converts it to an integer using atoi and returns it.
+ * 4. Moves the pointer to the next line by adding the length of the current line and the line-ending sequence.
+ * 5. If no Content-Length is found after scanning all headers logs a warning and returns 0.
+ *
+ * Research Notes:
+ * - The function uses case-insensitive comparisons (strcasecmp, strcasestr) to handle HTTP header variations.
+ * - atoi is used to convert the header value to an integer if invalid or missing the function gracefully returns 0.
+ * - The function assumes http_buff contains valid header data up to http_header_len.
+ */
+
 
 int get_http_content_len(char *http_buff, int http_header_len){
     char header_line[MAX_HEADER_LINE];
