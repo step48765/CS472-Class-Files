@@ -67,6 +67,16 @@ int process_request(const char *host, uint16_t port, char *resource){
         close(sock);
         return -1;
     }
+    while(1){
+        int bytes_recvd = recv(sock, recv_buff, BUFF_SZ, 0);
+        if (bytes_recvd <= 0){
+            break;
+        }
+        else{
+            printf("%.*s", bytes_recvd, recv_buff);
+            total_bytes = total_bytes + bytes_recvd;
+        }
+    }
 
     close(sock);
     return total_bytes;
