@@ -166,6 +166,8 @@ int submit_request(int sock, const char *host, uint16_t port, char *resource){
     //--------------------------------------------------------------------------------
     int content_len = 0;    //Change this to get the content length
     content_len = get_http_content_len(recv_buff, BUFF_SZ);
+
+    
     //--------------------------------------------------------------------------------
     // TODO:  Make sure you understand the calculations below
     //
