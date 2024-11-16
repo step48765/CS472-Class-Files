@@ -222,7 +222,7 @@ int submit_request(int sock, const char *host, uint16_t port, char *resource){
     //so that it can be used in the next request
 
     //---------------------------------------------------------------------------------
-    // TODO:  Documentation
+    // DONE- TODO:  Documentation
     //
     // You dont have any code to change, but explain why this function, if it gets to this
     // point returns an active socket.

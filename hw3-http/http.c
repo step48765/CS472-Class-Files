@@ -76,6 +76,34 @@ char *strnstr(const char *s, const char *find, size_t slen)
 }
 
 
+/**
+ * socket_connect function establishes a TCP connection to a specified host and port.
+ *
+ * It takes a hostname (host) and a port number (port) as input 
+ * and then attempts to setup a TCP connection with the following steps:
+ *
+ * 1. Links the hostname to an IP address using gethostbyname().
+ *    - If the hostname resolution fails the function returns -2.
+ * 2. it then copies the IP address into a sockaddr_in structure using bcopy().
+ *    - Sets the port using htons() to ensure the correct byte order.
+ *    - Specifies the address family as IPv4 (AF_INET).
+ * 3. Ones thats done it creates a socket with the socket() system call.
+ *    - If socket creation fails it logs the error and returns a -1.
+ * 4. Finally it attempts to connect to the server using connect().
+ *    - If the connection fails it will log the error then closes the socket and returns -1.
+ * 
+ * If everything works correctly with no errors the function returns the socket descriptor. This can 
+ * be used for communication with the server.
+ *
+ * Research Notes:
+ * - gethostbyname() resolves the hostname to an IP address but is considered 
+ *   deprecated. For modern code, getaddrinfo() is preferred.
+ * - bcopy() is used to copy the resolved address ensuring compatibility 
+ *   with the sockaddr_in structure.
+ * - The socket is set up for IPv4 (AF_INET) and TCP (SOCK_STREAM).
+ */
+
+
 int socket_connect(const char *host, uint16_t port){
     struct hostent *hp;
     struct sockaddr_in addr;
@@ -106,6 +134,7 @@ int socket_connect(const char *host, uint16_t port){
     return sock;
 }
 
+/*TODO: Comments*/
 
 int get_http_header_len(char *http_buff, int http_buff_len){
     char *end_ptr;
@@ -122,6 +151,7 @@ int get_http_header_len(char *http_buff, int http_buff_len){
     return header_len;
 }
 
+/*TODO: Comments*/
 
 int get_http_content_len(char *http_buff, int http_header_len){
     char header_line[MAX_HEADER_LINE];
