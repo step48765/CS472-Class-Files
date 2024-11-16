@@ -191,7 +191,7 @@ int submit_request(int sock, const char *host, uint16_t port, char *resource){
     //as bytes_remaining is positive
     while(bytes_remaining > 0){
         //-----------------------------------------------------------------------------
-        // TODO:  Continue receiving data from the server
+        // DONE- TODO:  Continue receiving data from the server
         //
         // 1. make a recv() call to the server, using recv_buff
         // 2. Get the number of bytes received and store in the bytes_recvd variable
@@ -199,14 +199,20 @@ int submit_request(int sock, const char *host, uint16_t port, char *resource){
         //      a. close the socket (sock)
         //      b. return -1 to indicate an error
         //-----------------------------------------------------------------------------
-        bytes_recvd = 0; // replace with a valid recv(...); call
-        
-        //You can uncomment out the fprintf() calls below to see what is going on
+        bytes_recvd = recv(sock, recv_buff, sizeof(recv_buff),0); 
+        if (bytes_recvd < 0)
+        {
+            close(sock);
+            return -1;
+        }
+        else{
+            //You can uncomment out the fprintf() calls below to see what is going on
 
-        //fprintf(stdout, "%.*s", bytes_recvd, recv_buff);
-        total_bytes += bytes_recvd;
-        //fprintf(stdout, "remaining %d, received %d\n", bytes_remaining, bytes_recvd);
-        bytes_remaining -= bytes_recvd;
+            //fprintf(stdout, "%.*s", bytes_recvd, recv_buff);
+            total_bytes += bytes_recvd;
+            //fprintf(stdout, "remaining %d, received %d\n", bytes_remaining, bytes_recvd);
+            bytes_remaining -= bytes_recvd;
+        }
     }
 
     fprintf(stdout, "\n\nOK\n");
@@ -220,7 +226,7 @@ int submit_request(int sock, const char *host, uint16_t port, char *resource){
     //
     // You dont have any code to change, but explain why this function, if it gets to this
     // point returns an active socket.
-    //
+    //  
     // YOUR ANSWER:  <START-YOUR-RESPONSE-HERE>
     //
     //--------------------------------------------------------------------------------
