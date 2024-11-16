@@ -90,7 +90,7 @@ int submit_request(int sock, const char *host, uint16_t port, char *resource){
     //the socket
     if (sent_bytes < 0){
         //----------------------------------------------------------------------------
-        //DONE TODO:  Reimplement the retry logic to reopen the socket
+        //DONE- TODO:  Reimplement the retry logic to reopen the socket
         //
         // The variable sock needs to be reset to a new socket with the server.
         // 1.  Use the sock = reopen_socket() helper you implemented above in an attempt
@@ -138,7 +138,7 @@ int submit_request(int sock, const char *host, uint16_t port, char *resource){
     //data.  We need to determine how much data we expect
 
     //--------------------------------------------------------------------------------
-    //TODO:  Get the header len
+    //DONE- TODO:  Get the header len
     //
     // 1. Use the get_http_header_len() function to set the header_len variable.
     // 2. The get_http_header_len() function returns a negative value if it fails, so
@@ -148,6 +148,12 @@ int submit_request(int sock, const char *host, uint16_t port, char *resource){
     //--------------------------------------------------------------------------------
     int header_len = 0;     //change this to get the header len as per the directions above
     
+    header_len = get_http_header_len(recv_buff, BUFF_SZ);
+    if (header_len < 0){
+        close(sock);
+        return -1;
+    }
+
 
     //--------------------------------------------------------------------------------
     //TODO:  Get the conetent len
