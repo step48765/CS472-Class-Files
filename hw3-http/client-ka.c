@@ -55,7 +55,15 @@ int reopen_socket(const char *host, uint16_t port) {
     //          5. If we fall out of the loop, we are unable to connect, return
     //             -1 to indicate a failure. 
     //----------------------------------------------------------------------------
-
+    int tries;
+    for(tries = 0; tries < MAX_REOPEN_TRIES; tries++){
+        sock = socket_connect(host,port);
+        if(sock > 0){
+            return sock;
+        }else{
+            return -1;
+        }
+    }
     
     return -1;
 }
