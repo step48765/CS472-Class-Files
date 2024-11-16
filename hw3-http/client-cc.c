@@ -57,6 +57,9 @@ int process_request(const char *host, uint16_t port, char *resource){
     //    accumulate all of the data received and return this value. 
     //---------------------------------------------------------------------------------
 
+
+    char generate_request = generate_cc_request(host, port, resource);
+
     close(sock);
     return total_bytes;
 }
