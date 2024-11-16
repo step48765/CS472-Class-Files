@@ -8,16 +8,16 @@ client-ka: client-ka.c http.c
 
 .PHONY: run-cc
 run-cc:
-	./client-cc httpbin.org 80 /
+	./client-cc localhost 80 /
 
 .PHONY: run-cc3
 run-cc3:
-	./client-cc httpbin.org 80 / /json /html
+	./client-cc localhost 80 / /json /html
 
 .PHONY: run-ka
 run-ka:
-	./client-ka httpbin.org 80 /
+	./client-ka localhost 80 /
 
 .PHONY: run-ka3
 run-ka3:
-	./client-ka httpbin.org 80 / /json /html
+	./client-ka localhost 80 / /json /html
