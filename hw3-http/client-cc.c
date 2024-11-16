@@ -58,7 +58,15 @@ int process_request(const char *host, uint16_t port, char *resource){
     //---------------------------------------------------------------------------------
 
 
-    char generate_request = generate_cc_request(host, port, resource);
+    char *generate_request = generate_cc_request(host, port, resource);
+
+    int request_length = strlen(generate_request);
+
+    if(send(sock, generate_request, request_length, 0) == -1){
+        perror("send failed");
+        close(sock);
+        return -1;
+    }
 
     close(sock);
     return total_bytes;
