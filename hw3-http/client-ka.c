@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <time.h>
 
 #define  BUFF_SZ            1024
 #define  MAX_REOPEN_TRIES   5
@@ -241,6 +242,8 @@ int submit_request(int sock, const char *host, uint16_t port, char *resource){
 
 int main(int argc, char *argv[]){
     int sock;
+    clock_t start_time, end_time;
+    start_time = clock();
 
     const char *host = DEFAULT_HOST;
     uint16_t   port = DEFAULT_PORT;
@@ -273,4 +276,7 @@ int main(int argc, char *argv[]){
     }
 
     server_disconnect(sock);
+    end_time = clock(); 
+    double total_time = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+    printf("Total execution time: %.7f seconds\n", total_time);
 }

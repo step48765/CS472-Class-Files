@@ -1,5 +1,6 @@
 #include "http.h"
 
+#include <time.h>
 #include <sys/socket.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -83,6 +84,8 @@ int process_request(const char *host, uint16_t port, char *resource){
 }
 
 int main(int argc, char *argv[]){
+    clock_t start_time, end_time;
+    start_time = clock();
     int sock;
 
     const char *host = DEFAULT_HOST;
@@ -112,4 +115,8 @@ int main(int argc, char *argv[]){
             process_request(host, port, resource);
         }
     }
+    end_time = clock(); 
+    double total_time = (double)(end_time - start_time) / CLOCKS_PER_SEC;
+    printf("Total execution time: %.7f seconds\n", total_time);
+
 }
