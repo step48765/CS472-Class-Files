@@ -35,7 +35,7 @@ int reopen_socket(const char *host, uint16_t port) {
     int sock = 0;
 
     //----------------------------------------------------------------------------
-    //TODO: Implement a loop that attempts a certain number of times to open a 
+    //DONE- TODO: Implement a loop that attempts a certain number of times to open a 
     //      socket with the host and port that is passed in as parameters.
     //
     //      I created a constant called MAX_REOPEN_TRIES (currently set to 5)
@@ -60,11 +60,8 @@ int reopen_socket(const char *host, uint16_t port) {
         sock = socket_connect(host,port);
         if(sock > 0){
             return sock;
-        }else{
-            return -1;
         }
     }
-    
     return -1;
 }
 
@@ -93,7 +90,7 @@ int submit_request(int sock, const char *host, uint16_t port, char *resource){
     //the socket
     if (sent_bytes < 0){
         //----------------------------------------------------------------------------
-        //TODO:  Reimplement the retry logic to reopen the socket
+        //DONE TODO:  Reimplement the retry logic to reopen the socket
         //
         // The variable sock needs to be reset to a new socket with the server.
         // 1.  Use the sock = reopen_socket() helper you implemented above in an attempt
@@ -105,8 +102,13 @@ int submit_request(int sock, const char *host, uint16_t port, char *resource){
         //     sent_bytes = send(sock, req, send_sz,0);
         //----------------------------------------------------------------------------
         
-        return -1;  //remove this line of code, i just want this to compile so the
-                    //block of code needs at least one line
+        sock = reopen_socket(host, port);
+        if(sock < 0){
+            return sock;
+        }
+        else{
+            sent_bytes = send(sock, req, send_sz, 0);
+        }
     }
 
     //This should not happen, but just checking if we didnt send everything and 
