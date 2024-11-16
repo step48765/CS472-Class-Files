@@ -169,14 +169,18 @@ int submit_request(int sock, const char *host, uint16_t port, char *resource){
 
     
     //--------------------------------------------------------------------------------
-    // TODO:  Make sure you understand the calculations below
+    // DONE- TODO:  Make sure you understand the calculations below
     //
     // You do not have to write any code, but add to this comment your thoughts on 
     // what the following 2 lines of code do to track the amount of data received
     // from the server
     //
     // YOUR ANSWER:  <START-YOUR-RESPONSE-HERE>
-    //
+    /* Response:
+
+    The first line calculates the amount of response data already received by subtracting the header len from the total bytes recved so far. This isolates the actaul data from the 1st recv call b/c it can contain both headers and part of the body.
+
+    The second line determines how much of the actaul data is remaining to be recved by subtracting the amount of data already gotten from the total specified in the header. This helps the program knows when it has received the full response.*/
     //--------------------------------------------------------------------------------
     int initial_data =  bytes_recvd - header_len;
     int bytes_remaining = content_len - initial_data;
