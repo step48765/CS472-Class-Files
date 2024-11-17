@@ -255,22 +255,34 @@ void print_header(char *http_buff, int http_header_len){
 // to change the signature in the http.h header file :-).  You also need to update client-ka.c to 
 // use this function to get full extra credit. 
 //--------------------------------------------------------------------------------------
-int process_http_header(char *http_buff, int http_buff_len, int *header_len, int *content_len){
-    int h_len, c_len = 0;
-    h_len = get_http_header_len(http_buff, http_buff_len);
-    if (h_len < 0) {
-        *header_len = 0;
-        *content_len = 0;
-        return -1;
+int process_http_header(char *http_buff, int http_buff_len, int *header_len, int *content_len) {
+    char header_line[MAX_HEADER_LINE] = {0}; 
+    char *next_header_line = http_buff; 
+    char *end_header_buff = http_buff + http_buff_len; 
+    char *header_end = NULL; 
+    *header_len = 0;
+    *content_len = 0;
+
+    while (next_header_line < end_header_buff) {
+        bzero(header_line, sizeof(header_line));
+        sscanf(next_header_line, "%[^\r\n]s", header_line);
+        if (strnstr(next_header_line, HTTP_HEADER_END, strlen(HTTP_HEADER_END)) != NULL) {
+            header_end = next_header_line + strlen(HTTP_HEADER_END);
+            *header_len = header_end - http_buff; 
+            break;
+        }
+        if (strcasestr(header_line,CL_HEADER) != NULL) {
+            char *header_value_start = strchr(header_line, HTTP_HEADER_DELIM);
+            if (header_value_start != NULL) {
+                *content_len = atoi(header_value_start + 1); 
+            }
+        }
+        next_header_line += strlen(header_line) + strlen(HTTP_HEADER_EOL);
     }
-    c_len = get_http_content_len(http_buff, http_buff_len);
-    if (c_len < 0) {
-        *header_len = 0;
-        *content_len = 0;
+    if (header_end == NULL) {
+        fprintf(stderr, "Couldn't find end of HTTP header\n");
         return -1;
     }
 
-    *header_len = h_len;
-    *content_len = c_len;
-    return 0; //success
+    return 0;
 }
