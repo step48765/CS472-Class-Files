@@ -1,0 +1,29 @@
+Run Times Comparison
+
+| Run | client-ka3 (seconds) | client-cc3 (seconds) |
+|-----|-----------------------|----------------------|
+|  1  |      0.0007190       |      0.0010560      |
+|  2  |      0.0005590       |      0.0010700      |
+|  3  |      0.0007700       |      0.0011650      |
+|  4  |      0.0008380       |      0.0016870      |
+|  5  |      0.0005590       |      0.0013970      |
+|  6  |      0.0007410       |      0.0014220      |
+|  7  |      0.0007270       |      0.0018380      |
+|  8  |      0.0006600       |      0.0015020      |
+|  9  |      0.0008390       |      0.0016200      |
+| 10  |      0.0006310       |      0.0016340      |
+-----------------------------------------------------
+| Avg |      0.0007043       |      0.0014391      |
+----------------------------------------------------
+
+Connection Close vs. Connection Keep-Alive
+
+Connection Close had an average runtime of 0.0014391 seconds while Connection Keep-Alive had an average runtime of 0.0007043 seconds. 
+Keep-Alive is nearly twice as fast because it reuses the same socket for all requests avoiding the overhead of repeatedly opening and closing sockets as in Connection Close. 
+
+Keep-Alive is faster due to reduced overhead(resources) fewer TCP handshakes and more efficient server resource management. 
+Connection Close incurs extra time for each request due to creating and tearing down sockets. 
+
+In some cases the difference may be less noticeable because small payloads reduce the impact of connection overhead or network latency dominates the total runtime. 
+
+Overall Keep-Alive performs better by minimizing connection costs and improving efficiency in handling multiple requests.
